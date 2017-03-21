@@ -18,19 +18,19 @@
 
 # if no install version was specified
 # use the default
-if node.read('cronner', 'install_version').nil?
+if ! node['cronner'].key?('install_version')
   node.default['cronner']['install_version'] = node['cronner']['default_install_version']
 end
 
-cronner_version = node.read!('cronner', 'install_version')
+cronner_version = node['cronner']['install_version']
 
 # if no installation checksum was specified
 # use the default from the known_versions hash
-if node.read('cronner', 'install_checksum').nil?
-  node.default['cronner']['install_checksum'] = node.read!('cronner', 'known_versions', cronner_version, 'linux-amd64', 'checksum')
+if ! node['cronner'].key?('install_checksum')
+  node.default['cronner']['install_checksum'] = node['cronner']['known_versions'][cronner_version]['linux-amd64']['checksum']
 end
 
-cronner_checksum = node.read!('cronner', 'install_checksum')
+cronner_checksum = node['cronner']['install_checksum']
 
 cache_path = ::File.join(Chef::Config[:file_cache_path], 'cronner-linux-amd64.tar.gz')
 binary_path = ::File.join('/opt', "cronner-linux-amd64-v#{cronner_version}", 'cronner')
